@@ -11,5 +11,10 @@ t.daemon = True
 t.start()
 
 # 在PyWebview应用程序中加载FastAPI应用程序的URL
-webview.create_window('校友管理系统', 'http://localhost:8000')
+webview.create_window(
+    '校友管理系统',
+    'http://localhost:8000',
+    fullscreen=True,
+    min_size=(1200, 720)
+)
 webview.start()

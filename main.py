@@ -14,7 +14,7 @@ app.mount("/assets", StaticFiles(directory=os.path.join(STATIC_DIR, 'assets')), 
 
 @app.get('/', response_class=HTMLResponse)
 def index():
-    with open(os.path.join(STATIC_DIR, 'index.html')) as f:
+    with open(os.path.join(STATIC_DIR, 'index.html'), encoding='utf-8') as f:
         return f.read()
 
 
