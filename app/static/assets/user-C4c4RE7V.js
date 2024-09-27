@@ -1,0 +1,1 @@
+import{d as r}from"./index-CJd5nHo2.js";const i=r("allUsersStore",{state(){return{users:[]}},actions:{setUsers(s){this.users=s},addUser(s){this.users.push(s)},removeUser(s){this.users=this.users.filter(e=>e.id!==s)},updateUser(s){this.users=this.users.map(e=>e.id===s.id?s:e)}}});export{i as u};
