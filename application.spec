@@ -3,8 +3,8 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-    ('app\\static', 'app\\static'),
-    ('ico.ico', '.'),
+    ('app/static', 'app/static'),
+    ('ico.png', '.'),
     ],
     hiddenimports=[],
     hookspath=[],
@@ -34,5 +34,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='ico.ico'
+    icon='ico.png'
 )
