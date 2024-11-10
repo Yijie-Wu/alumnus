@@ -17,11 +17,3 @@ def searchAlumnus(data: SearchSchema, db: Session):
 
     else:
         return ResponseException.HTTP_400_BAD_REQUEST
-
-
-def searchHistory(db: Session):
-    pass
-
-
-def clearSearchHistory(db: Session):
-    pass

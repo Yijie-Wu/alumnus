@@ -1,7 +1,7 @@
 <script setup>
 import {ref, onMounted, computed} from "vue";
 
-import {get_alumnus, search_alumnus} from "../../../apis/alumnus.js";
+import {get_alumnus, search_alumnus, delete_alumnus} from "../../../apis/alumnus.js";
 import {useAllAlumnusStore} from "../../../stores/admin/alumnus.js";
 import {showMessage} from "../../../utils/message.js";
 import {calcAvatar, calcFile} from "../../../utils/common.js";
@@ -71,7 +71,6 @@ const handleClearSearch = () => {
   search.value = ''
 }
 
-
 const handleView = (index, row) => {
   viewData.value = row
   viewDialog.value = true
@@ -83,7 +82,12 @@ const handleEdit = (index, row) => {
 }
 
 const handleDelete = (index, row) => {
-  console.log(index, row)
+  delete_alumnus(row.id).then(res => {
+    store.removeAlumnus(row.id);
+    showMessage('success', '删除校友成功')
+  }).catch(err => {
+    showMessage('error', '删除校友失败')
+  })
 }
 
 </script>
@@ -112,40 +116,30 @@ const handleDelete = (index, row) => {
       <el-table-column label="校友ID" prop="alumnus_id" align="center" fixed="left" width="200"/>
       <el-table-column label="校友头像" prop="photo" align="center" width="100">
         <template #default="{row}">
-          <el-avatar
-              :size="50"
+          <el-image
               :src="calcFile(row.photo)"
-              shape="circle"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column label="校友老照片" prop="old_photo" align="center" width="100">
-        <template #default="{row}">
-          <el-avatar
-              :size="50"
-              :src="calcFile(row.old_photo)"
-              shape="circle"
+              loading="lazy"
+              style="width:30px;height: 30px;border-radius: 50%;"
           />
         </template>
       </el-table-column>
       <el-table-column label="校友姓名" prop="alumnus_name" align="center" width="200"/>
       <el-table-column label="校友性别" prop="alumnus_gender" align="center" width="100"/>
-      <el-table-column label="校友生日" prop="birthday" align="center" width="200"/>
       <el-table-column label="校友国籍" prop="nationality" align="center" width="200"/>
       <el-table-column label="校友民族" prop="nation" align="center" width="200"/>
       <el-table-column label="校友学号" prop="student_number" align="center" width="200"/>
       <el-table-column label="校友籍贯" prop="native_place" align="center" width="400">
         <template #default="{row}">
-          <el-text truncated>{{row.native_place}}</el-text>
+          <el-text truncated>{{ row.native_place }}</el-text>
         </template>
       </el-table-column>
       <el-table-column align="center" fixed="right" width="240" label="相关操作">
         <template #default="scope">
           <el-button type="success" round @click="handleView(scope.$index, scope.row)">查看</el-button>
           <el-button type="warning" round :disabled="scope.row.username === 'root'" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-popconfirm title="确定要删除吗?" confirm-button-text="确定" cancel-button-text="取消" width="300">
+          <el-popconfirm title="确定要删除吗?" @confirm="handleDelete(scope.$index, scope.row)" confirm-button-text="确定" cancel-button-text="取消" width="300">
             <template #reference>
-              <el-button type="danger" round :disabled="scope.row.role === '超级管理员'" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button type="danger" round :disabled="scope.row.role === '超级管理员'">删除</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -165,15 +159,6 @@ const handleDelete = (index, row) => {
           />
         </template>
       </el-table-column>
-      <el-table-column label="校友老照片" prop="old_photo" align="center" width="100">
-        <template #default="{row}">
-          <el-avatar
-              :size="50"
-              :src="calcFile(row.old_photo)"
-              shape="circle"
-          />
-        </template>
-      </el-table-column>
       <el-table-column label="校友姓名" prop="alumnus_name" align="center" width="200"/>
       <el-table-column label="校友性别" prop="alumnus_gender" align="center" width="100"/>
       <el-table-column label="校友生日" prop="birthday" align="center" width="200"/>
@@ -182,16 +167,16 @@ const handleDelete = (index, row) => {
       <el-table-column label="校友学号" prop="student_number" align="center" width="200"/>
       <el-table-column label="校友籍贯" prop="native_place" align="center" width="400">
         <template #default="{row}">
-          <el-text truncated>{{row.native_place}}</el-text>
+          <el-text truncated>{{ row.native_place }}</el-text>
         </template>
       </el-table-column>
       <el-table-column align="center" fixed="right" width="240" label="相关操作">
         <template #default="scope">
           <el-button type="success" round @click="handleView(scope.$index, scope.row)">查看</el-button>
           <el-button type="warning" round :disabled="scope.row.username === 'root'" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-popconfirm title="确定要删除吗?" confirm-button-text="确定" cancel-button-text="取消" width="300">
+          <el-popconfirm title="确定要删除吗?" @confirm="handleDelete(scope.$index, scope.row)" confirm-button-text="确定" cancel-button-text="取消" width="300">
             <template #reference>
-              <el-button type="danger" round :disabled="scope.row.role === '超级管理员'" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button type="danger" round :disabled="scope.row.role === '超级管理员'">删除</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -211,7 +196,7 @@ const handleDelete = (index, row) => {
     />
   </div>
   <div class="pagination-container" v-show="searchMode">
-    {{searchResult.length}} 条搜索结果
+    {{ searchResult.length }} 条搜索结果
   </div>
 
   <el-dialog

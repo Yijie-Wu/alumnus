@@ -34,10 +34,8 @@ const props = defineProps(['data'])
             {{props.data.native_place}}
           </el-descriptions-item>
         </el-descriptions>
-        <el-descriptions title="学校信息" border style="margin-top: 20px;">
-          <el-descriptions-item label="校友类型">{{props.data.alumnus_type}}</el-descriptions-item>
-          <el-descriptions-item label="校友类别">{{props.data.birthday}}</el-descriptions-item>
-          <el-descriptions-item label="重点校友类型">{{props.data.important_alumnus_type}}</el-descriptions-item>
+        <el-descriptions title="其他信息" border style="margin-top: 20px;">
+          <el-descriptions-item label="学校名称">{{props.data.school_name}}</el-descriptions-item>
           <el-descriptions-item label="入学年份">
             <el-tag size="small">{{props.data.enrollment_year}}</el-tag>
           </el-descriptions-item>
@@ -47,19 +45,22 @@ const props = defineProps(['data'])
           <el-descriptions-item label="学号">
             {{props.data.student_number}}
           </el-descriptions-item>
-          <el-descriptions-item label="学历">
-            {{props.data.education_background}}
-          </el-descriptions-item>
           <el-descriptions-item label="院系">
             {{props.data.department}}
           </el-descriptions-item>
           <el-descriptions-item label="专业">
             {{props.data.major}}
           </el-descriptions-item>
-          <el-descriptions-item label="班级">
-            {{props.data.class_name}}
+          <el-descriptions-item label="通讯地址">
+            {{props.data.address}}
           </el-descriptions-item>
         </el-descriptions>
+        <div style="margin-top: 15px;">
+          <h3>个人简介</h3>
+          <div>
+            <el-input type="textarea" v-model="props.data.description" rows="3" disabled></el-input>
+          </div>
+        </div>
 
       </el-col>
     </el-row>

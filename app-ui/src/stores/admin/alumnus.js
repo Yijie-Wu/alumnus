@@ -20,6 +20,9 @@ export const useAllAlumnusStore = defineStore('allAlumnusStore', {
                 }
                 return alumnus;
             });
-        }
+        },
+        removeAlumnus(id) {
+            this.alumnuss = this.alumnuss.filter(alumnus => alumnus.id !== id);
+        },
     }
 })

@@ -1,10 +1,10 @@
 <template>
   <div class="logo-container" @click="goHome">
     <div class="logo-collapse">
-      <img src="@/assets/image/logo.jpeg" alt="logo">
+      <img src="@/assets/image/logo.jpg" alt="logo">
     </div>
     <div class="logo-title">
-      <span class="logo-text-admin">泉州经贸职业技术学院</span>
+      <img src="@/assets/image/cnb_name.png" alt="logo" style="height: 20px;">
     </div>
   </div>
 </template>

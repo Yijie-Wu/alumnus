@@ -5,7 +5,7 @@ import {View} from "@element-plus/icons-vue";
 import AlumnusDetail from '../../components/cards/AlumnusDetail.vue'
 
 const props = defineProps(['alumnus'])
-const windowHeight = window.innerHeight - 150
+const windowHeight = window.innerHeight - 180
 
 const viewData = ref({})
 const viewDialog = ref(false)
@@ -27,19 +27,10 @@ const handleView = (index, row) => {
           <el-table-column label="校友ID" prop="alumnus_id" align="center" fixed="left" width="200"/>
           <el-table-column label="校友头像" prop="photo" align="center" width="100">
             <template #default="{row}">
-              <el-avatar
-                  :size="50"
+              <el-image
                   :src="calcFile(row.photo)"
-                  shape="circle"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="校友老照片" prop="old_photo" align="center" width="100">
-            <template #default="{row}">
-              <el-avatar
-                  :size="50"
-                  :src="calcFile(row.old_photo)"
-                  shape="circle"
+                  loading="lazy"
+                  style="width:40px;height: 40px;border-radius: 50%;"
               />
             </template>
           </el-table-column>

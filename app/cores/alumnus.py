@@ -15,7 +15,7 @@ def getAllAlumnus(skip: int, limit: int, db: Session):
 
 
 def getAllShowAlumnus(db: Session):
-    data = db.query(Alumnus).filter_by(show=True).all()
+    data = db.query(Alumnus).all()
 
     return data
 
@@ -40,11 +40,6 @@ def updateAlumnus(id: int, alumnus: UpdateAlumnus, db: Session):
         return ResponseException.HTTP_404_NOT_FOUND
 
     item.alumnus_id = alumnus.alumnus_id  # 校友ID
-    item.alumnus_type = alumnus.alumnus_type  # 校友类型
-    item.photo = alumnus.photo  # 证件照
-    item.old_photo = alumnus.old_photo  # 老照片
-    item.alumnus_category = alumnus.alumnus_category  # 校友类别
-    item.important_alumnus_type = alumnus.important_alumnus_type  # 重点校友类型
     item.alumnus_name = alumnus.alumnus_name  # 姓名
     item.alumnus_gender = alumnus.alumnus_gender  # 性别
     item.birthday = alumnus.birthday  # 出生日期
@@ -52,14 +47,16 @@ def updateAlumnus(id: int, alumnus: UpdateAlumnus, db: Session):
     item.native_place = alumnus.native_place  # 籍贯
     item.nation = alumnus.nation  # 民族
     item.politics_status = alumnus.politics_status  # 政治面貌
+    item.address = alumnus.address  # 政治面貌
     item.enrollment_year = alumnus.enrollment_year  # 入学年份
     item.graduation_year = alumnus.graduation_year  # 毕业年份
     item.student_number = alumnus.student_number  # 学号
-    item.education_background = alumnus.education_background  # 学历
     item.department = alumnus.department  # 院系
     item.major = alumnus.major  # 专业
     item.class_name = alumnus.class_name  # 班级
-    item.show = alumnus.show
+    item.school_name = alumnus.school_name  # 学校
+    item.photo = alumnus.photo  # 证件照
+    item.description = alumnus.description  # 个人介绍
 
     db.commit()
     db.refresh(item)
@@ -68,7 +65,7 @@ def updateAlumnus(id: int, alumnus: UpdateAlumnus, db: Session):
 
 
 def deleteAlumnus(id: int, db: Session):
-    item = db.query(Alumnus).filter(id=id).first()
+    item = db.query(Alumnus).filter_by(id=id).first()
     if not item:
         return ResponseException.HTTP_404_NOT_FOUND
 

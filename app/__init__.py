@@ -6,7 +6,7 @@ from loguru import logger
 from fastapi import FastAPI
 
 from app.apis import router
-from app.models import Roles, User, Config
+from app.models import Roles, User
 from app.middlewares import add_cors_middleware
 from app.settings import Settings, load_app_settings, DATA_STORE_DIR
 from app.extensions import generate_tables, SessionLocal
@@ -25,7 +25,6 @@ def create_app() -> FastAPI:
     register_router(app, settings)
     init_dirs(settings)
     register_middlewares(app, settings)
-    register_logging(settings)
     register_databases(settings)
 
     return app
@@ -77,19 +76,6 @@ def register_databases(settings: Settings):
     init_admin(settings)
 
 
-def register_logging(settings: Settings):
-    logger.remove()
-
-    logger.add(
-        sys.stdout,
-        format=settings.LOGGING.FORMAT,
-        level=settings.LOGGING.LEVEL,
-        enqueue=settings.LOGGING.ENQUEUE,
-        backtrace=settings.LOGGING.TRACEBACK,
-        diagnose=settings.LOGGING.DIAGNOSE
-    )
-
-
 def init_dirs(settings: Settings):
     if not os.path.exists(DATA_STORE_DIR):
         os.makedirs(DATA_STORE_DIR, exist_ok=True)
@@ -99,6 +85,3 @@ def init_dirs(settings: Settings):
 
     if not os.path.exists(settings.APP.AVATARS_DIR):
         os.makedirs(settings.APP.AVATARS_DIR, exist_ok=True)
-
-    if not os.path.exists(settings.APP.LOGS_DIR):
-        os.makedirs(settings.APP.LOGS_DIR, exist_ok=True)

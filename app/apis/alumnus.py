@@ -28,7 +28,7 @@ def alumnus_show(db: Session = Depends(get_rdbms)):
 
 
 @router.post('/create', status_code=200, description='创建校友')
-def create_Alumnus(
+def create_alumnus(
         alumnus: CreateAlumnus,
         db: Session = Depends(get_rdbms),
         user: UserSchema = Depends(get_admin_user)

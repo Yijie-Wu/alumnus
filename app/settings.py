@@ -5,7 +5,6 @@ from pathlib import Path
 
 USER_HOME = os.path.expanduser("~")
 STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
-# DATA_STORE_DIR = os.path.join(Path(__file__).parent.parent, 'alumnus_data')
 DATA_STORE_DIR = os.path.join(USER_HOME, 'alumnus_data')
 
 
@@ -22,7 +21,6 @@ class Settings:
         JWT_SECRET_KEY: str = 'JWT_SECRET_KEY'
         JWT_ALGORITHM: str = 'HS256'
         ADMIN_USERNAME: str = 'root'
-        LOGS_DIR: str = os.path.join(DATA_STORE_DIR, 'logs')
         AVATARS_DIR: str = os.path.join(DATA_STORE_DIR, 'avatars')
         ALUMNUS_AVATARS_DIR: str = os.path.join(DATA_STORE_DIR, 'alumnus-avatars')
 

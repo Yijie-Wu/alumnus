@@ -12,6 +12,7 @@ const loading = ref(false)
 const basic_auth_message = ref('登陆校友管理系统')
 const store = useUserStore()
 const router = useRouter()
+const index = ref(true)
 
 const form = reactive({
   username: '',
@@ -42,10 +43,14 @@ const loginByBasicAuth = (formEl) => {
     login_by_basic_auth(form).then(res => {
       setToken(res.data.token);
       store.setIsLogin(true);
-      router.push({path: '/'})
+      if (index.value === true) {
+        router.push({path: '/'})
+      }else {
+        router.push({path: '/big-screen'})
+      }
       showMessage('success', '登陆成功')
     }).catch(err => {
-      showMessage('error', err.message)
+      showMessage('error', '登陆失败')
     }).finally(() => {
       loading.value = false
       basic_auth_message.value = '登陆校友管理系统'
@@ -55,7 +60,9 @@ const loginByBasicAuth = (formEl) => {
 
 
 function onKeyUp(e) {
-  if (e.key === "Enter") loginByBasicAuth(formRef.value)
+  if (e.key === "Enter") {
+    loginByBasicAuth(formRef.value)
+  }
 }
 
 onBeforeUnmount(() => {
@@ -67,17 +74,16 @@ onBeforeUnmount(() => {
 <template>
   <el-row class="main-container">
     <el-col :xs="0" :sm="0" :md="0" :lg="12" :xl="12" class="logo-container">
-      <img class="logo-image" src="@/assets/image/welcome.png" alt="logo"/>
     </el-col>
     <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" class="login-container">
       <div class="login-box">
         <div class="login-header">
           <div class="login-logo">
-            <img src="@/assets/image/logo.jpeg" alt="">
+            <img src="@/assets/image/logo.jpg" alt="">
           </div>
           <div class="logo-name">
-            <div><h1 style="color:#0dda91">泉州经贸职业技术学院</h1></div>
-            <div>校友管理系统平台</div>
+            <div><img src="@/assets/image/cnb_name.png" alt="logo" style="height: 40px;"></div>
+            <div style="font-weight: bold; font-size: 30px;margin-top: 20px;">校友管理系统</div>
           </div>
         </div>
         <div class="form-area">
@@ -102,8 +108,18 @@ onBeforeUnmount(() => {
                   show-password
               />
             </el-form-item>
-            <el-form-item style="margin-top:30px;box-sizing:border-box;">
-              <el-button type="success" plain size="large" round style="width:100%;" @click="loginByBasicAuth(formRef)"
+            <div>
+              <el-switch
+                  v-model="index"
+                  class="ml-2"
+                  inline-prompt
+                  style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                  active-text="首页"
+                  inactive-text="大屏"
+              />
+            </div>
+            <el-form-item style="margin-top:20px;box-sizing:border-box;">
+              <el-button type="success" size="large" round style="width:100%;" @click="loginByBasicAuth(formRef)"
                          :loading="loading">{{ basic_auth_message }}
               </el-button>
             </el-form-item>
@@ -118,7 +134,10 @@ onBeforeUnmount(() => {
 .main-container {
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(90deg, #4A90E2 0%, rgba(196, 116, 35, 0.29) 100%);
+  background: url("../../assets/image/school.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .logo-container {
@@ -130,6 +149,7 @@ onBeforeUnmount(() => {
 
 .logo-container img {
   width: 80%;
+  height: 80%;
 }
 
 .login-container {
@@ -144,7 +164,7 @@ onBeforeUnmount(() => {
   width: 80%;
   min-height: 70%;
   padding: 20px;
-  background-color: #ffffff;
+  background: linear-gradient(60deg, rgba(200, 191, 12, 0.4) 40%, rgba(196, 116, 35, 0.29) 60%);
   border-radius: 15px;
   box-shadow: 0 0 5px rgb(13, 218, 145);
 }
@@ -166,9 +186,6 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #13ce66;
-  font-size: 40px;
-  font-weight: bold;
   border-radius: 50%;
   width: 150px;
   height: 150px;
@@ -178,13 +195,13 @@ onBeforeUnmount(() => {
   width: 90%;
   height: 90%;
   border-radius: 50%;
-  top: -50%;
-  position: relative;
+  /*top: -50%;*/
+  /*position: relative;*/
 }
 
 .logo-name {
-  top: -80px;
-  position: relative;
+  /*top: -80px;*/
+  /*position: relative;*/
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -193,6 +210,7 @@ onBeforeUnmount(() => {
 
 .form-area {
   padding: 5px 0;
+  margin-top: 60px;
 }
 
 

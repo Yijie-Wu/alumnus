@@ -30,6 +30,8 @@ class User(Base):
     updated_at = Column('updated_at', DateTime, default=datetime.now(), onupdate=datetime.now)
     role_id = Column('role_id', Integer, ForeignKey('roles.id'))
     role = relationship('Roles', back_populates='users')
+    create_at = Column('create_at', DateTime, default=datetime.now)
+    update_at = Column('update_at', DateTime, default=datetime.now, onupdate=datetime.now)
 
     def init_role(self, db: Session):
         if self.role is None:
@@ -44,46 +46,68 @@ class Alumnus(Base):
     __tablename__ = 'alumnus'
 
     id = Column('id', Integer, autoincrement=True, primary_key=True)
-    alumnus_id = Column('alumnus_id', String(200))  # 校友ID
-    alumnus_type = Column('alumnus_type', String(200))  # 校友类型
-    photo = Column('photo', String(200))  # 证件照
-    old_photo = Column('old_photo', String(200))  # 老照片
-    alumnus_category = Column('alumnus_category', String(200))  # 校友类别
-    important_alumnus_type = Column('important_alumnus_type', String(200))  # 重点校友类型
-    alumnus_name = Column('alumnus_name', String(200))  # 姓名
-    alumnus_gender = Column('alumnus_gender', String(200))  # 性别
-    birthday = Column('birthday', String(200))  # 出生日期
-    nationality = Column('nationality', String(200))  # 国籍
-    native_place = Column('native_place', String(200))  # 籍贯
-    nation = Column('nation', String(200))  # 民族
-    politics_status = Column('politics_status', String(200))  # 政治面貌
-    enrollment_year = Column('enrollment_year', String(200))  # 入学年份
-    graduation_year = Column('graduation_year', String(200))  # 毕业年份
-    student_number = Column('student_number', String(200))  # 学号
-    education_background = Column('education_background', String(200))  # 学历
-    department = Column('department', String(200))  # 院系
-    major = Column('major', String(200))  # 专业
-    class_name = Column('class_name', String(200))  # 班级
+    # 校友ID
+    alumnus_id = Column('alumnus_id', String(30))
+    # 姓名
+    alumnus_name = Column('alumnus_name', String(50))
+    # 性别
+    alumnus_gender = Column('alumnus_gender', String(1))
+    # 出生日期 1990-01-01
+    birthday = Column('birthday', String(10))
+    # 国籍
+    nationality = Column('nationality', String(20))
+    # 籍贯
+    native_place = Column('native_place', String(100))
+    # 民族
+    nation = Column('nation', String(10))
+    # 政治面貌
+    politics_status = Column('politics_status', String(10))
+    # 通讯地址
+    address = Column('address', String(100))
+    # 入学年份
+    enrollment_year = Column('enrollment_year', String(5))
+    # 毕业年份
+    graduation_year = Column('graduation_year', String(5))
+    # 学号
+    student_number = Column('student_number', String(30))
+    # 院系
+    department = Column('department', String(30))
+    # 专业
+    major = Column('major', String(30))
+    # 班级
+    class_name = Column('class_name', String(30))
+    # 学校名称
+    school_name = Column('school_name', String(30))
+    # 证件照
+    photo = Column('photo', String(100))
+    # 个人简介
+    description = Column('description', Text, default='')
+    create_at = Column('create_at', DateTime, default=datetime.now)
+    update_at = Column('update_at', DateTime, default=datetime.now, onupdate=datetime.now)
+
+
+class Year(Base):
+    __tablename__ = 'year'
+
+    id = Column('id', Integer, autoincrement=True, primary_key=True)
+    year_name = Column('year_name', String(10))
+    old_photos = relationship('OldPhotos', back_populates='year')
+
+
+class OldPhotos(Base):
+    __tablename__ = 'old_photos'
+
+    id = Column('id', Integer, autoincrement=True, primary_key=True)
+    original_name = Column('original_name', String(200))
+    store_name = Column('store_name', String(100))
+    year_id = Column('year_id', Integer, ForeignKey('year.id'))
+    year = relationship('Year', back_populates='old_photos')
+
+
+class Carousel(Base):
+    __tablename__ = 'carousel'
+
+    id = Column('id', Integer, autoincrement=True, primary_key=True)
+    store_name = Column('store_name', String(100))
+    desc = Column('desc', String(100))
     show = Column('show', Boolean, default=False)
-    meta = Column('meta', Text, default="{}")
-    create_at = Column('create_at', DateTime, default=datetime.now)
-    update_at = Column('update_at', DateTime, default=datetime.now, onupdate=datetime.now)
-
-
-class Config(Base):
-    __tablename__ = 'config'
-
-    id = Column('id', Integer, autoincrement=True, primary_key=True)
-    name = Column('name', String(100))
-    content = Column('content', Text, default="{}")
-    create_at = Column('create_at', DateTime, default=datetime.now)
-    update_at = Column('update_at', DateTime, default=datetime.now, onupdate=datetime.now)
-
-
-class Search(Base):
-    __tablename__ = 'search'
-
-    id = Column('id', Integer, autoincrement=True, primary_key=True)
-    q = Column(String(200))
-    result = Column(String(200), default='')
-    create_at = Column('create_at', DateTime, default=datetime.now)

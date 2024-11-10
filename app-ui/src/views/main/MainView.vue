@@ -2,8 +2,8 @@
 import {ref, onMounted} from "vue";
 import {useRouter} from 'vue-router';
 import {search_alumnus} from "../../apis/alumnus.js";
-import {get_show_alumnus} from "../../apis/alumnus.js";
-import {useAllShowAlumnusStore} from "../../stores/main/alumnus.js";
+import {get_show_carousels} from "../../apis/carousel.js";
+import {useCarouselsStore} from "../../stores/main/carousel.js";
 import {showMessage} from "../../utils/message.js";
 import LogoMain from "../../components/basic/LogoMain.vue";
 import MainSearch from "../../components/cards/MainSearch.vue"
@@ -15,14 +15,14 @@ const router = useRouter()
 const searchMode = ref(false)
 const searchResult = ref([])
 const searchText = ref('');
-const alumnus_store = useAllShowAlumnusStore()
+const carousel_store = useCarouselsStore()
 
 
 onMounted(() => {
-  get_show_alumnus().then(res => {
-    alumnus_store.setAlumnus(res.data);
+  get_show_carousels().then(res => {
+    carousel_store.setCarousels(res.data);
   }).catch(err => {
-    showMessage('error', '获取展示列表失败')
+    showMessage('error', '获取轮播列表失败')
   })
 })
 
@@ -81,9 +81,9 @@ const refreshIndexPage = () => {
         <el-col :xm="8" :sm="8" :md="7" :lg="6" :xl="5">
           <div class="nav-user-area">
             <div>
-              <el-button type="success" plain round :icon="Search" @click="startSearch();">搜索</el-button>
-              <el-button type="warning" plain round :icon="Close" :disabled="!searchMode" @click="clearSearch();">清除</el-button>
-              <el-button type="primary" plain round :icon="Refresh" @click="refreshIndexPage();">刷新</el-button>
+              <el-button type="success" round :icon="Search" @click="startSearch();">搜索</el-button>
+              <el-button type="warning" round :icon="Close" :disabled="!searchMode" @click="clearSearch();">清除</el-button>
+              <el-button type="primary" round :icon="Refresh" @click="refreshIndexPage();">刷新</el-button>
             </div>
             <MainMenuAvatar/>
           </div>
@@ -92,7 +92,7 @@ const refreshIndexPage = () => {
     </div>
     <div class="main-body">
       <MainSearch v-if="searchMode" :alumnus="searchResult"/>
-      <MainIndexPeoples v-else :alumnus="alumnus_store.alumnuss"/>
+      <MainIndexPeoples v-else :carousels="carousel_store.carousels"/>
     </div>
   </div>
 
@@ -106,20 +106,21 @@ const refreshIndexPage = () => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background: linear-gradient(90deg, rgba(243, 198, 16, 0.76) 40%, rgba(123, 239, 105, 0.4) 60%);
 }
 
 .main-head {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  height: 60px;
+  height: 80px;
 }
 
 .main-body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 80px);
   overflow-y: scroll;
   margin: 0;
   padding: 0;
@@ -132,7 +133,10 @@ const refreshIndexPage = () => {
   padding: 0 10px;
   border-radius: 30px;
   box-sizing: border-box;
-  background-color: lightgray;
+  background-color: rgba(255,255,255,0.1);
+  box-shadow: 20px 20px 50px rgba(0,0,0,0.5);
+    /* 背景模糊 */
+  backdrop-filter: blur(5px);
 }
 
 .nav-user-area {

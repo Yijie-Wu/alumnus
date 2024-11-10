@@ -48,7 +48,6 @@ export function delete_alumnus(id) {
     )
 }
 
-
 export function search_alumnus(data) {
     return axios(
         {

@@ -16,10 +16,9 @@ const selectedID = ref(0)
 const upload1 = ref(null)
 const store = useAllAlumnusStore()
 const upload_api = 'http://127.0.0.1:8000/upload/file'
-
-
 const props = defineProps(['data'])
-
+const alumnus_genders = ['男', '女']
+const politics_status = ['群众', '共青团员', '中共党员', '其他']
 
 const form = reactive({
   alumnus_id: '',//校友ID
@@ -30,29 +29,26 @@ const form = reactive({
   native_place: '',// 籍贯
   nation: '',//民族
   politics_status: '',// 政治面貌
-  photo: '',//证件照
-  old_photo: '',//老照片
-  alumnus_type: '',//校友类型
-  alumnus_category: '',//校友类别
-  important_alumnus_type: '',//重点校友类型
+  address: '', // 通讯地址
   enrollment_year: '',// 入学年份
   graduation_year: '',//毕业年份
   student_number: '',//学号
-  education_background: '',//学历
   department: '',//院系
   major: '',//专业
   class_name: '',//班级
-  show: false,
+  school_name: '', //学校名称
+  photo: '',//证件照
+  description: '' // 个人描述信息
 })
 
 const rules = reactive({
   alumnus_id: [
     {required: true, message: '校友ID不能为空', trigger: 'blur'},
-    {min: 1, max: 200, message: '校友ID长度必须在1到200之间', trigger: 'blur'},
+    {min: 1, max: 30, message: '校友ID长度必须在1到30之间', trigger: 'blur'},
   ],
   alumnus_name: [
     {required: true, message: '校友名称不能为空', trigger: 'blur'},
-    {min: 1, max: 200, message: '校友名称长度必须在1到200之间', trigger: 'blur'},
+    {min: 2, max: 50, message: '校友名称长度必须在2到50之间', trigger: 'blur'},
   ],
   alumnus_gender: [
     {required: true, message: '校友性别不能为空', trigger: 'blur'},
@@ -62,29 +58,27 @@ const rules = reactive({
   ],
   nationality: [
     {required: true, message: '校友国籍不能为空', trigger: 'blur'},
+    {min: 2, max: 20, message: '校友国籍长度必须在2到20之间', trigger: 'blur'},
+  ],
+  native_place: [
+    {min: 2, max: 100, message: '校友籍贯长度必须在2到100之间', trigger: 'blur'}
+  ],
+  nation: [
+    {min: 1, max: 10, message: '校友民族长度必须在1到10之间', trigger: 'blur'}
   ],
   politics_status: [
     {required: true, message: '校友政治面貌不能为空', trigger: 'blur'},
   ],
-  native_place: [
-    {required: true, message: '校友籍贯不能为空', trigger: 'blur'},
-  ],
   photo: [
     {required: true, message: '请上传校友照片', trigger: 'blur'},
-  ],
-  old_photo: [
-    {required: true, message: '请上传校友老照片', trigger: 'blur'},
   ],
 })
 
 onMounted(() => {
   selectedID.value = props.data.id
   form.alumnus_id = props.data.alumnus_id
-  form.alumnus_type = props.data.alumnus_type
+  form.address = props.data.address
   form.photo = props.data.photo
-  form.old_photo = props.data.old_photo
-  form.alumnus_category = props.data.alumnus_category
-  form.important_alumnus_type = props.data.important_alumnus_type
   form.alumnus_name = props.data.alumnus_name
   form.alumnus_gender = props.data.alumnus_gender
   form.birthday = props.data.birthday
@@ -95,11 +89,11 @@ onMounted(() => {
   form.enrollment_year = props.data.enrollment_year
   form.graduation_year = props.data.graduation_year
   form.student_number = props.data.student_number
-  form.education_background = props.data.education_background
+  form.school_name = props.data.school_name
   form.department = props.data.department
   form.major = props.data.major
   form.class_name = props.data.class_name
-  form.show = props.data.show
+  form.description = props.data.description
 })
 
 
@@ -119,25 +113,6 @@ const handleExceed = (files) => {
   file.uid = genFileId()
   upload.value.handleStart(file)
   upload.value.submit()
-}
-
-
-function handleSuccess1(file) {
-  files.value.push(file.filename);
-  form.old_photo = file.filename;
-  showMessage('success', '老照片上传成功')
-}
-
-function handleError1(err) {
-  showMessage('error', '老照片上传失败')
-}
-
-const handleExceed1 = (files) => {
-  upload1.value.clearFiles()
-  const file = files[0]
-  file.uid = genFileId()
-  upload1.value.handleStart(file)
-  upload1.value.submit()
 }
 
 
@@ -181,12 +156,30 @@ const updateAlumnus = (formEl) => {
           </el-col>
           <el-col :span="24">
             <el-form-item style="margin-top:10px;" prop="alumnus_gender" label="校友性别">
-              <el-input v-model="form.alumnus_gender" class="w-50 m-2" placeholder="校友性别" size="large" type="text" style="width: 40%;min-width:240px;"/>
+              <el-select
+                  v-model="form.alumnus_gender"
+                  placeholder="选择校友性别"
+                  size="large"
+                  style="width: 40%;min-width:240px;"
+              >
+                <el-option
+                    v-for="item in alumnus_genders"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item style="margin-top:10px;" prop="birthday" label="校友生日">
-              <el-input v-model="form.birthday" class="w-50 m-2" placeholder="校友生日" size="large" type="text" style="width: 40%;min-width:240px;"/>
+              <el-date-picker
+                  v-model="form.birthday"
+                  type="date"
+                  placeholder="选择校友生日"
+                  style="width: 40%;min-width:240px;"
+                  value-format="YYYY-MM-DD"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -201,132 +194,95 @@ const updateAlumnus = (formEl) => {
           </el-col>
           <el-col :span="24">
             <el-form-item style="margin-top:10px;" prop="politics_status" label="政治面貌">
-              <el-input v-model="form.politics_status" class="w-50 m-2" placeholder="政治面貌" size="large" type="text" style="width: 40%;min-width:240px;"/>
+              <el-select
+                  v-model="form.politics_status"
+                  placeholder="选择政治面貌"
+                  size="large"
+                  style="width: 40%;min-width:240px;"
+              >
+                <el-option
+                    v-for="item in politics_status"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                />
+              </el-select>
             </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <div style="display: flex;align-items: center;background-color: whitesmoke;">
+              <div style="flex:1;">
+                <el-form-item style="margin-top:10px;" prop="photo" label="校友照片">
+                  <el-upload
+                      ref="upload"
+                      :action="upload_api"
+                      list-type="picture-card"
+                      :auto-upload="true"
+                      :show-file-list="true"
+                      :v-model="files"
+                      :limit="1"
+                      :onSuccess="handleSuccess"
+                      :onError="handleError"
+                      :onExceed="handleExceed"
+                      accept="image/*"
+                  >
+                    <el-icon>
+                      <Plus/>
+                    </el-icon>
+                    <template #file="{ file }">
+                      <div>
+                        <img class="el-upload-list__item-thumbnail" :src="file.url" alt=""/>
+                      </div>
+                    </template>
+                  </el-upload>
+                </el-form-item>
+              </div>
+              <div style="width:240px;display: flex;">
+                <div style="margin-right: 10px;">当前照片</div>
+                <el-image :src="calcFile(form.photo)" style="width:140px;height:140px;"></el-image>
+              </div>
+            </div>
           </el-col>
           <el-col :span="24">
             <el-form-item style="margin-top:10px;" prop="native_place" label="校友籍贯">
               <el-input v-model="form.native_place" class="w-50 m-2" placeholder="校友籍贯" size="large" type="text"/>
             </el-form-item>
           </el-col>
-        </el-row>
-      </el-card>
-
-      <el-card class="mt-1">
-        <template #header>
-          <div class="card-header">
-            <span>更新校友头像/老照片</span>
-          </div>
-        </template>
-        <el-row :gutter="10">
-          <el-col :span="24" style="border-bottom: 1px solid lightgrey;">
-            <div style="width: 100%;margin-bottom: 20px;display: flex;align-items: center;justify-content: space-between;">
-              <div style="display: flex;align-items: flex-start;justify-content: flex-start;width: 49%;">
-                <span style="margin-right: 65px;">当前头像</span>
-                <el-image :src="calcFile(form.photo)" style="width:120px;height:120px;"></el-image>
-              </div>
-              <div style="display: flex;align-items: flex-start;justify-content: flex-start;width: 49%;">
-                <span style="margin-right: 50px;">当前老照片</span>
-                <el-image :src="calcFile(form.old_photo)" style="width:120px;height:120px;"></el-image>
-              </div>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item style="margin-top:10px;" prop="photo" label="头像">
-              <el-upload
-                  ref="upload"
-                  :action="upload_api"
-                  list-type="picture-card"
-                  :auto-upload="true"
-                  :show-file-list="true"
-                  :v-model="files"
-                  :limit="1"
-                  :onSuccess="handleSuccess"
-                  :onError="handleError"
-                  :onExceed="handleExceed"
-                  accept="image/*"
-              >
-                <el-icon>
-                  <Plus/>
-                </el-icon>
-                <template #file="{ file }">
-                  <div>
-                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt=""/>
-                  </div>
-                </template>
-              </el-upload>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item style="margin-top:10px;" prop="old_photo" label="老照片">
-              <el-upload
-                  ref="upload1"
-                  :action="upload_api"
-                  list-type="picture-card"
-                  :auto-upload="true"
-                  :show-file-list="true"
-                  :v-model="files"
-                  :limit="1"
-                  :onSuccess="handleSuccess1"
-                  :onError="handleError1"
-                  :onExceed="handleExceed1"
-                  accept="image/*"
-              >
-                <el-icon>
-                  <Plus/>
-                </el-icon>
-                <template #file="{ file }">
-                  <div>
-                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt=""/>
-                  </div>
-                </template>
-              </el-upload>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-card>
-
-      <el-card class="mt-1">
-        <template #header>
-          <div class="card-header">
-            <span>校友设置</span>
-          </div>
-        </template>
-        <el-row :gutter="10">
           <el-col :span="24">
-            <el-form-item style="margin-top:10px;" prop="alumnus_type" label="校友类型">
-              <el-input v-model="form.alumnus_type" class="w-50 m-2" placeholder="校友类型" size="large" type="text" style="width: 40%;min-width:240px;"/>
+            <el-form-item style="margin-top:10px;" prop="address" label="通讯地址">
+              <el-input v-model="form.address" class="w-50 m-2" placeholder="通讯地址" size="large" type="text"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item style="margin-top:10px;" prop="alumnus_category" label="校友类别">
-              <el-input v-model="form.alumnus_category" class="w-50 m-2" placeholder="校友类别" size="large" type="text" style="width: 40%;min-width:240px;"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item style="margin-top:10px;" prop="important_alumnus_type" label="重点类型">
-              <el-input v-model="form.important_alumnus_type" class="w-50 m-2" placeholder="重点校友类型" size="large" type="text"
-                        style="width: 40%;min-width:240px;"/>
+            <el-form-item style="margin-top:10px;" prop="school_name" label="学校名称">
+              <el-input v-model="form.school_name" class="w-50 m-2" placeholder="学校名称" size="large" type="text" style="width: 40%;min-width:240px;"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item style="margin-top:10px;" prop="enrollment_year" label="入学年份">
-              <el-input v-model="form.enrollment_year" class="w-50 m-2" placeholder="入学年份" size="large" type="text" style="width: 40%;min-width:240px;"/>
+              <el-date-picker
+                  v-model="form.enrollment_year"
+                  type="year"
+                  placeholder="选择入学年份"
+                  style="width: 40%;min-width:240px;"
+                  value-format="YYYY"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item style="margin-top:10px;" prop="graduation_year" label="毕业年份">
-              <el-input v-model="form.graduation_year" class="w-50 m-2" placeholder="毕业年份" size="large" type="text" style="width: 40%;min-width:240px;"/>
+              <el-date-picker
+                  v-model="form.graduation_year"
+                  type="year"
+                  placeholder="选择毕业年份"
+                  style="width: 40%;min-width:240px;"
+                  value-format="YYYY"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item style="margin-top:10px;" prop="student_number" label="校友学号">
               <el-input v-model="form.student_number" class="w-50 m-2" placeholder="校友学号" size="large" type="text" style="width: 40%;min-width:240px;"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item style="margin-top:10px;" prop="education_background" label="校友学历">
-              <el-input v-model="form.education_background" class="w-50 m-2" placeholder="校友学历" size="large" type="text" style="width: 40%;min-width:240px;"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -345,8 +301,8 @@ const updateAlumnus = (formEl) => {
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item style="margin-top:10px;" prop="show" label="是否展示在首页">
-              <el-switch v-model="form.show" class="w-50 m-2"></el-switch>
+            <el-form-item style="margin-top:10px;" prop="description" label="个人简介">
+              <el-input v-model="form.description" class="w-50 m-2" placeholder="个人简介" size="large" type="textarea" rows="4"/>
             </el-form-item>
           </el-col>
         </el-row>

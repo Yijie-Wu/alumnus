@@ -9,6 +9,16 @@ const routes = [
         component: () => import('../views/main/MainView.vue')
     },
     {
+        path: '/big-screen',
+        name: 'MainBigScreen',
+        component: () => import('../views/main/MainBigScreenView.vue')
+    },
+    {
+        path: '/old-photos',
+        name: 'MainOldPhotos',
+        component: () => import('../views/main/OldPhotos.vue')
+    },
+    {
         path: '/admin',
         name: 'Admin',
         component: () => import('../views/admin/Admin.vue'),
@@ -58,6 +68,26 @@ const routes = [
                 name: 'AdminUsersAdd',
                 component: () => import('../views/admin/users/UserAdd.vue'),
             },
+            {
+                path: '/admin/year/list',
+                name: 'AdminYearsList',
+                component: () => import('../views/admin/year/Years.vue'),
+            },
+            {
+                path: '/admin/year/add',
+                name: 'AdminYearAdd',
+                component: () => import('../views/admin/year/YearAdd.vue'),
+            },
+            {
+                path: '/admin/carousel/list',
+                name: 'AdminCarouselList',
+                component: () => import('../views/admin/carousel/Carousels.vue'),
+            },
+            {
+                path: '/admin/carousel/add',
+                name: 'AdminCarouselAdd',
+                component: () => import('../views/admin/carousel/CarouselAdd.vue'),
+            },
         ]
     },
     {
@@ -90,38 +120,18 @@ const router = createRouter({
 
 // 路由拦截器
 router.beforeEach((to, from, next) => {
-    if (to.path.startsWith('/admin')) {
+    if (to.path.endsWith('big-screen')) {
+        next();
+    } else if (to.path.startsWith('/admin')) {
         if (isLoginedUser()) {
-            next()
-        }else {
+            next();
+        } else {
             next('/auth/login')
         }
-    }else {
-        next()
+    } else {
+        next();
     }
 })
-
-
-// router.beforeEach((to, from, next) => {
-//     // 如果用户已经登录
-//     if (isLoginedUser()) {
-//         // 如果用户访问登录页面
-//         if (to.path === '/auth/login') {
-//             showMessage('warning', '您已经处于登陆状态')
-//             // 跳转到首页
-//             next('/')
-//         } else {
-//             // 否则放行
-//             next()
-//         }
-//     } else {
-//         if (to.path === '/auth/login') {
-//             next()
-//         } else {
-//             next('/auth/login')
-//         }
-//     }
-// })
 
 
 export default router

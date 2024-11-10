@@ -1,10 +1,17 @@
 <script setup>
-import {User, DataBoard, Grape, Setting} from '@element-plus/icons-vue'
+import {User, DataBoard, Grape, Setting, Calendar, DocumentCopy} from '@element-plus/icons-vue'
 
 </script>
 
 <template>
-  <el-menu :default-active="$route.path" class="admin-aside" router unique-opened :collapse-transition="false">
+  <el-menu
+      :default-active="$route.path"
+      class="admin-aside"
+      router
+      unique-opened
+      active-text-color="darkorange"
+      :collapse-transition="false"
+  >
     <el-menu-item index="/admin">
       <el-icon>
         <DataBoard/>
@@ -31,6 +38,26 @@ import {User, DataBoard, Grape, Setting} from '@element-plus/icons-vue'
       </template>
       <el-menu-item index="/admin/alumnus">校友列表</el-menu-item>
       <el-menu-item index="/admin/alumnus/add">新增校友</el-menu-item>
+    </el-sub-menu>
+    <el-sub-menu index="class-manager">
+      <template #title>
+        <el-icon>
+          <Calendar/>
+        </el-icon>
+        年份照片
+      </template>
+      <el-menu-item index="/admin/year/list">年份列表</el-menu-item>
+      <el-menu-item index="/admin/year/add">新增年份</el-menu-item>
+    </el-sub-menu>
+    <el-sub-menu index="fronts-manager">
+      <template #title>
+        <el-icon>
+          <DocumentCopy/>
+        </el-icon>
+        轮播管理
+      </template>
+      <el-menu-item index="/admin/carousel/list">轮播列表</el-menu-item>
+      <el-menu-item index="/admin/carousel/add">新增轮播</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="user-settings">
       <template #title>

@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, computed} from "vue";
 import {useRouter} from 'vue-router'
-import {User, SwitchButton, DataBoard, Postcard} from "@element-plus/icons-vue";
+import {User, SwitchButton, DataBoard, Postcard, Picture} from "@element-plus/icons-vue";
 import {get_userinfo} from "@/apis/user.js";
 import {calcAvatar} from "../../utils/common.js";
 
@@ -68,6 +68,12 @@ function logout() {
               <Postcard/>
             </el-icon>
             {{user_store.userInfo.role}}
+          </el-dropdown-item>
+          <el-dropdown-item @click="goTo('/old-photos');" divided>
+            <el-icon>
+              <Picture/>
+            </el-icon>
+            年份老照片
           </el-dropdown-item>
           <el-dropdown-item @click="goTo('/admin');" divided v-if="user_store.userInfo.role === '超级管理员'">
             <el-icon>

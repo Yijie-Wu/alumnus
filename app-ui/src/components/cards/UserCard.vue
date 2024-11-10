@@ -20,7 +20,7 @@ const handleView = (data) => {
   <div class="user-card-container">
     <el-row :gutter="10" style="height: 100%;">
       <el-col :span="8" v-for="user in props.info" style="margin: 10px 0;height: 46%;">
-        <el-card shadow="hover" @click="handleView(user)">
+        <el-card shadow="hover" @click="handleView(user)" style="background-color: rgb(125, 186, 152, 0.4);">
           <el-row :gutter="10" style="height: 100%;">
             <el-col :span="11" style="height: 100%;">
               <img :src="calcFile(user.photo)" class="avatar-image" alt=""/>

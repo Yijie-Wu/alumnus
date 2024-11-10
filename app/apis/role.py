@@ -13,7 +13,7 @@ settings = load_app_settings()
 
 @router.get('/all', status_code=200, description='获取所有角色')
 def roles(
-        # user: UserSchema = Depends(get_current_user),
+        user: UserSchema = Depends(get_current_user),
         db: Session = Depends(get_rdbms)
 
 ):
