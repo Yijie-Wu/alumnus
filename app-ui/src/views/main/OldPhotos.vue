@@ -1,10 +1,10 @@
 <script setup>
 import {ref, onMounted, computed} from "vue";
-import {Search, House} from "@element-plus/icons-vue";
+import {Search} from "@element-plus/icons-vue";
 import {useRouter} from 'vue-router'
-import {get_years_photos_message, get_year_photos_message, search_photos} from "../../apis/message.js";
-import {showMessage} from "../../utils/message.js";
-import {calcFile} from "../../utils/common.js";
+import {get_years_photos_message, get_year_photos_message, search_photos} from "@/apis/message.js";
+import {showMessage} from "@/utils/message.js";
+import {calcFile} from "@/utils/common.js";
 
 const search = ref('');
 const viewMode = ref('年份模式');
@@ -18,7 +18,7 @@ const current_view_image = ref('')
 const current_view_image_name = ref('')
 
 const searchPhoto = () => {
-  if (search.value.trim().length == 0) {
+  if (search.value.trim().length === 0) {
     showMessage('error', '请至少输入一个非空字符串')
     return
   }
@@ -98,7 +98,8 @@ const filteredList = computed(() => {
             <img src="@/assets/image/oldpic.png" alt="" style="width: 64px;height: 36px;border-radius: 3px;"/>
           </div>
           <div>
-            <h4 style="margin-left: 10px;">{{ ye.year_name }} 年老照片</h4>
+            <h4 style="margin-left: 10px;" v-if="ye.year_name === '1964' || ye.year_name === '1965'">{{ ye.year_name }} 级老照片</h4>
+            <h4 style="margin-left: 10px;" v-else>{{ ye.year_name }} 届老照片</h4>
           </div>
         </el-badge>
       </div>
@@ -108,11 +109,16 @@ const filteredList = computed(() => {
         <div>
           <el-input v-model="searchCurrent" size="large" :prefix-icon="Search" placeholder="搜索当前页老照片"/>
         </div>
-        <div>
+        <div style="display: flex;">
           <el-tag type="primary">{{ viewMode }}</el-tag>
-          <el-tag type="info" v-if="viewMode==='年份模式'" style="margin-left: 10px;">{{ current_year.year_name }}年老照片,共{{ current_year.old_photos_count }}张
-          </el-tag>
-          <el-tag type="warning" v-else style="margin-left: 10px;">[{{ search }}]的老照片搜索结果,共{{ viewPhotos.length }}张</el-tag>
+          <div v-if="current_year.year_name === '1964' || current_year.year_name === '1965'">
+            <el-tag type="info" v-if="viewMode==='年份模式'" style="margin-left: 10px;">{{ current_year.year_name }}级老照片,共{{ current_year.old_photos_count }}张</el-tag>
+            <el-tag type="warning" v-else style="margin-left: 10px;">[{{ search }}]的老照片搜索结果,共{{ viewPhotos.length }}张</el-tag>
+          </div>
+          <div v-else>
+            <el-tag type="info" v-if="viewMode==='年份模式'" style="margin-left: 10px;">{{ current_year.year_name }}届老照片,共{{ current_year.old_photos_count }}张</el-tag>
+            <el-tag type="warning" v-else style="margin-left: 10px;">[{{ search }}]的老照片搜索结果,共{{ viewPhotos.length }}张</el-tag>
+          </div>
         </div>
         <div>
           <el-button round type="warning" @click="route.go(0)" style="margin-right: 3px;">刷新页面</el-button>

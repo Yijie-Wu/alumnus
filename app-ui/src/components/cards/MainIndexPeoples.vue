@@ -27,7 +27,7 @@ const viewDialog = ref(false)
               <el-image :src="calcFile(item.store_name)" style="width: 100%;height: 100%;"></el-image>
             </div>
             <div class="image-desc">
-              <el-text truncated type="warning" style="font-weight: bold; font-size: 40px;">{{ item.desc }}</el-text>
+              {{ item.desc }}
             </div>
           </el-carousel-item>
         </el-carousel>
@@ -58,12 +58,16 @@ const viewDialog = ref(false)
 }
 
 .image-desc {
-  height: 60px;
+  height: 200px;
   position: relative;
-  top: -60px;
+  top: -200px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: gold;
+  padding: 0 20px;
 }
 
 </style>

@@ -2,9 +2,9 @@
 import {onMounted, computed} from "vue";
 import {useRouter} from 'vue-router'
 import {User, SwitchButton, DataBoard, Postcard, Picture} from "@element-plus/icons-vue";
-import {get_userinfo} from "@/apis/user.js";
-import {calcAvatar} from "../../utils/common.js";
 
+import {calcAvatar} from "../../utils/common.js";
+import {get_userinfo} from "@/apis/user.js";
 import {removeToken} from "@/utils/token.js";
 import {showMessage} from "@/utils/message.js";
 import {useUserStore} from "@/stores/user/user.js";
@@ -13,10 +13,12 @@ const route = useRouter();
 let user_store = useUserStore()
 
 
-onMounted(async () => {
-  await get_userinfo().then((res) => {
-    user_store.setUserInfo(res.data);
-  });
+onMounted(() => {
+  if (user_store.isLogin) {
+    get_userinfo().then((res) => {
+        user_store.setUserInfo(res.data);
+      });
+  }
 });
 
 const avatar_url = computed(() => {
@@ -41,12 +43,15 @@ function logout() {
   user_store.setUserInfo({});
   user_store.isLogin = false;
   showMessage('success', '登出成功');
-  route.push('/auth/login');
+  route.push('/');
 }
 </script>
 
 <template>
-  <div class="avatar-container">
+  <div v-if="user_store.userInfo.username === undefined">
+    <el-button :icon="User" type="danger" round @click="route.push('/auth/login')">登陆</el-button>
+  </div>
+  <div v-else class="avatar-container">
     <el-dropdown trigger="click">
     <span class="el-dropdown-link">
       <el-avatar
@@ -68,12 +73,6 @@ function logout() {
               <Postcard/>
             </el-icon>
             {{user_store.userInfo.role}}
-          </el-dropdown-item>
-          <el-dropdown-item @click="goTo('/old-photos');" divided>
-            <el-icon>
-              <Picture/>
-            </el-icon>
-            年份老照片
           </el-dropdown-item>
           <el-dropdown-item @click="goTo('/admin');" divided v-if="user_store.userInfo.role === '超级管理员'">
             <el-icon>

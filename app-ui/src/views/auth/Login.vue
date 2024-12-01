@@ -1,6 +1,7 @@
 <script setup>
 import {ref, onBeforeUnmount, reactive} from 'vue';
 import {User, Lock} from '@element-plus/icons-vue'
+import {get_userinfo} from "@/apis/user.js";
 import {useUserStore} from "@/stores/user/user.js";
 import {setToken} from "@/utils/token.js";
 import {showMessage} from "@/utils/message.js";
@@ -43,9 +44,14 @@ const loginByBasicAuth = (formEl) => {
     login_by_basic_auth(form).then(res => {
       setToken(res.data.token);
       store.setIsLogin(true);
+
+      get_userinfo().then((res) => {
+        store.setUserInfo(res.data);
+      });
+
       if (index.value === true) {
         router.push({path: '/'})
-      }else {
+      } else {
         router.push({path: '/big-screen'})
       }
       showMessage('success', '登陆成功')
@@ -118,10 +124,18 @@ onBeforeUnmount(() => {
                   inactive-text="大屏"
               />
             </div>
-            <el-form-item style="margin-top:20px;box-sizing:border-box;">
-              <el-button type="success" size="large" round style="width:100%;" @click="loginByBasicAuth(formRef)"
-                         :loading="loading">{{ basic_auth_message }}
-              </el-button>
+            <el-form-item
+                style="margin-top:20px;box-sizing:border-box;display: flex;align-items: center;width:100%;">
+              <div style="width: 48%;">
+                <el-button type="success" size="large" round style="width:100%;" @click="loginByBasicAuth(formRef)"
+                           :loading="loading">{{ basic_auth_message }}
+                </el-button>
+              </div>
+              <div style="width: 48%;margin-left: 20px;">
+                <el-button type="primary" size="large" round style="width:100%;" @click="router.push('/')">
+                  返回首页
+                </el-button>
+              </div>
             </el-form-item>
           </el-form>
         </div>

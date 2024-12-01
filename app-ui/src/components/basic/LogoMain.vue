@@ -3,7 +3,7 @@
     <div class="logo">
       <img src="@/assets/image/logo.jpg" alt="logo">
     </div>
-    <div class="logo-title hidden-sm-and-down">
+    <div class="logo-title hidden-md-and-down">
       <img src="@/assets/image/cnb_name.png" alt="logo" style="height: 30px;">
     </div>
   </div>
@@ -50,12 +50,6 @@ function goHome() {
   align-items: center;
   padding: 0 10px;
   flex: 1;
-}
-
-.logo-text {
-  font-size: 20px;
-  font-weight: bold;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 </style>

@@ -12,9 +12,11 @@ const props = defineProps(['data'])
     <el-row :gutter="20">
       <el-col :span="6">
         <el-image
+            v-if="props.data.photo.trim() !== ''"
             :src="calcFile(props.data.photo)"
             style="border: 1px solid lightgrey;border-radius: 8px;width: 100%;"
         />
+        <el-empty description="照片暂未上传"/>
       </el-col>
       <el-col :span="18">
         <el-descriptions :title="props.data.alumnus_name" border>

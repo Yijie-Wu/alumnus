@@ -1,6 +1,6 @@
 let api_server = 'http://127.0.0.1:8000'
 
-export function calcAvatar(avatar = 'avatar.png') {
+export function calcAvatar(avatar = 'default-avatar.png') {
     return `${api_server}/user/avatar/${avatar}`
 }
 

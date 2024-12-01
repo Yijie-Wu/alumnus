@@ -1,1 +1,0 @@
-import{a as o}from"./request-vRFKru4k.js";import{d as r}from"./index-CJd5nHo2.js";function l(){return o({method:"get",url:"/role/all"})}const a=r("allRolesStore",{state(){return{roles:[]}},actions:{setRoles(e){this.roles=e}}});export{l as g,a as u};

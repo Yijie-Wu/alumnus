@@ -9,12 +9,14 @@ import LogoMain from "../../components/basic/LogoMain.vue";
 import MainSearch from "../../components/cards/MainSearch.vue"
 import MainIndexPeoples from "../../components/cards/MainIndexPeoples.vue"
 import MainMenuAvatar from "../../components/avatar/MainMenuAvatar.vue";
-import {Search, Close, Refresh, Postcard} from "@element-plus/icons-vue";
+import {Search, Close, Refresh, Postcard, Picture} from "@element-plus/icons-vue";
 
 const router = useRouter()
 const searchMode = ref(false)
 const searchResult = ref([])
 const searchText = ref('');
+const in_search = ref(false)
+const searching = ref('搜索')
 const carousel_store = useCarouselsStore()
 
 
@@ -32,6 +34,9 @@ const startSearch = () => {
     return
   }
 
+  searching.value = '搜索中...'
+  in_search.value = true
+
   let data = {
     search_by: '姓名',
     q: searchText.value
@@ -40,15 +45,21 @@ const startSearch = () => {
   search_alumnus(data).then(res => {
     searchResult.value = res.data;
     searchMode.value = true;
+    searching.value = '搜索'
+    in_search.value = false
   }).catch(err => {
+    searching.value = '搜索'
+    in_search.value = false
     showMessage('error', '搜索出错');
   })
 }
 
 const clearSearch = () => {
   searchMode.value = false;
+  in_search.value = false
   searchText.value = '';
   searchResult.value = []
+  searching.value = '搜索'
 }
 
 const refreshIndexPage = () => {
@@ -62,12 +73,12 @@ const refreshIndexPage = () => {
   <div class="main-container">
     <div class="main-head">
       <el-row class="main-nav">
-        <el-col :xs="8" :sm="8" :md="7" :lg="6" :xl="5">
+        <el-col :xs="3" :sm="2" :md="2" :lg="6" :xl="6">
           <div class="logo-container">
             <LogoMain/>
           </div>
         </el-col>
-        <el-col :xm="8" :sm="8" :md="10" :lg="12" :xl="14">
+        <el-col :xm="8" :sm="6" :md="10" :lg="9" :xl="9">
           <div class="menu-container">
             <el-input
                 v-model="searchText"
@@ -78,12 +89,13 @@ const refreshIndexPage = () => {
             ></el-input>
           </div>
         </el-col>
-        <el-col :xm="8" :sm="8" :md="7" :lg="6" :xl="5">
+        <el-col :xm="13" :sm="16" :md="12" :lg="9" :xl="9">
           <div class="nav-user-area">
             <div>
-              <el-button type="success" round :icon="Search" @click="startSearch();">搜索</el-button>
+              <el-button type="success" round :disabled="in_search == true" :icon="Search" @click="startSearch();">{{searching}}</el-button>
               <el-button type="warning" round :icon="Close" :disabled="!searchMode" @click="clearSearch();">清除</el-button>
               <el-button type="primary" round :icon="Refresh" @click="refreshIndexPage();">刷新</el-button>
+              <el-button type="info" round :icon="Picture" @click="router.push('/old-photos');" style="margin-right: 20px;">老照片</el-button>
             </div>
             <MainMenuAvatar/>
           </div>
@@ -169,7 +181,7 @@ const refreshIndexPage = () => {
 
 .nav-user-area {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin: 0;
   padding-left: 15px;

@@ -92,7 +92,7 @@ const changePassword = (formEl) => {
 .change-pass-container {
   width: 90%;
   margin: 20px auto;
-  border: 1px solid #555555;
+  border: 1px solid lightgrey;
   padding: 10px;
   border-radius: 10px;
 }

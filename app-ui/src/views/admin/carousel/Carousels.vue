@@ -94,9 +94,9 @@ const updateCarousel = (formEl) => {
       <el-table-column align="center" fixed="right" label="操作" width="160">
         <template #default="scope">
           <el-button type="warning" round @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-popconfirm title="确定要删除吗?" confirm-button-text="确定" cancel-button-text="取消" width="300">
+          <el-popconfirm title="确定要删除吗?" @confirm="handleDelete(scope.$index, scope.row)" confirm-button-text="确定" cancel-button-text="取消" width="300">
             <template #reference>
-              <el-button type="danger" round @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button type="danger" round>删除</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -108,7 +108,6 @@ const updateCarousel = (formEl) => {
       v-model="editDialog"
       title="修改轮播信息"
       width="75%"
-      @closed="handleClose"
   >
     <div>
       <div>

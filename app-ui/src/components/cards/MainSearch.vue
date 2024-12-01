@@ -25,13 +25,15 @@ const handleView = (index, row) => {
         <el-table :data="props.alumnus" style="width: 100%" border :height="windowHeight">
           <el-table-column label="校友编号" prop="id" align="center" fixed="left" width="100"/>
           <el-table-column label="校友ID" prop="alumnus_id" align="center" fixed="left" width="200"/>
-          <el-table-column label="校友头像" prop="photo" align="center" width="100">
+          <el-table-column label="校友头像" prop="photo" align="center" width="110">
             <template #default="{row}">
               <el-image
+                  v-if="row.photo.length > 0"
                   :src="calcFile(row.photo)"
                   loading="lazy"
                   style="width:40px;height: 40px;border-radius: 50%;"
               />
+              <el-tag v-else type="warning" round>暂时未上传</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="校友姓名" prop="alumnus_name" align="center" width="200"/>

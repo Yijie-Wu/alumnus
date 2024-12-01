@@ -95,27 +95,12 @@ def updateUserProfile(upf: UserProfile, user: UserSchema, db: Session):
     }
 
 
-def changePassword(cp: ChangePassword, user: UserSchema, db: Session):
-    user_db = db.query(User).filter_by(username=user.get('username', '')).first()
-    if cp.new_password != cp.confirm_password:
-        raise HTTPException(status_code=400, detail='两次密码输入不一致')
-
-    if not verify_password(user_db.password_hash, cp.old_password):
-        raise HTTPException(status_code=400, detail='原始密码错误')
-
-    user_db.password_hash = hash_password(cp.new_password)
-    db.commit()
-    db.refresh(user_db)
-
-    return {'detail': '重设密码成功'}
-
-
 def addNewUser(cp: UserAdd, db: Session):
     user_db = db.query(User).filter_by(username=cp.username).first()
     if user_db:
         raise HTTPException(status_code=400, detail='用户名已经存在')
 
-    new_user = User(username=cp.username, role_id=cp.role_id, password_hash=hash_password('Passw0rd!'))
+    new_user = User(username=cp.username, role_id=cp.role_id, password_hash=hash_password('123456'))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -144,11 +129,11 @@ def changePassword(cp: ChangePassword, user: UserSchema, db: Session):
     if not user_db:
         raise HTTPException(status_code=400, detail='用户不存在')
 
-    if cp.old_password != cp.confirm_password:
+    if cp.new_password != cp.confirm_password:
         raise HTTPException(status_code=400, detail='两次密码不一致')
 
     if verify_password(user_db.password_hash, cp.old_password):
-        raise HTTPException(status_code=400, detail='原始米密码错误')
+        raise HTTPException(status_code=400, detail='原始密码错误')
 
     user_db.password_hash = hash_password(cp.new_password)
     db.commit()

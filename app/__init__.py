@@ -1,8 +1,4 @@
 import os.path
-import sys
-import json
-
-from loguru import logger
 from fastapi import FastAPI
 
 from app.apis import router

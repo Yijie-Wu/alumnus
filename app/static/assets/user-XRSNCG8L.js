@@ -1,1 +1,0 @@
-import{d as o,M as t}from"./index-CJd5nHo2.js";const r=o("userStore",{state(){return{userInfo:{},isLogin:t()}},actions:{setIsLogin(e){this.isLogin=e},setUserInfo(e){this.userInfo=e},addToken(e){this.userInfo.tokens.push(e)},deleteToken(e){let s=this.userInfo.tokens.findIndex(n=>n.name===e);this.userInfo.tokens.splice(s,1)}}});export{r as u};

@@ -46,7 +46,7 @@ def updateCarousel(id: int, carousel: UpdateCarousels, db: Session):
 
 
 def deleteCarousel(id: int, db: Session):
-    item = db.query(Carousel).filter(id=id).first()
+    item = db.query(Carousel).filter_by(id=id).first()
     if not item:
         return ResponseException.HTTP_404_NOT_FOUND
 
